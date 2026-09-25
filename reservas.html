@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="es-ES">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Reserva tu cita en Gómez Estilistas, C. de la Zapatería, 38, Pamplona.">
+  <title>Reservar | Gómez Estilistas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css"><script type="module" src="app.js"></script>
+</head>
+<body data-page="booking">
+  <div class="page-shell">
+    <header class="site-header"><a class="brand" href="index.html" aria-label="Gómez Estilistas, inicio"><span class="brand-mark">G</span><span><strong>Gómez</strong><small>Estilistas</small></span></a><nav class="site-nav" aria-label="Navegacion principal"><a href="servicios.html">Servicios</a><a class="is-active" href="reservas.html">Reservar</a><a href="index.html#filosofia">El estudio</a></nav><a class="button button-compact" href="reservas.html">Reservar cita <span aria-hidden="true">↗</span></a></header>
+    <main>
+      <section class="page-hero page-hero-compact" data-reveal><p class="eyebrow">Gómez Estilistas · Pamplona</p><h1>Reserva tu<br><em>cita.</em></h1><p>Elige el día y el momento que mejor encajen contigo. Te esperamos en C. de la Zapatería, 38.</p></section>
+      <section class="booking-section booking-page-section" aria-label="Formulario de reserva"><div class="booking-panel" data-reveal><div class="booking-step"><span>01</span><h2>Elige una fecha</h2><label for="booking-date-display">Fecha de tu cita <small>(día/mes/año)</small></label><div class="date-picker"><input id="booking-date-display" type="text" inputmode="numeric" placeholder="dd/mm/aaaa" autocomplete="off" aria-describedby="date-format-help" required><button id="booking-date-picker" type="button" aria-label="Abrir calendario">Calendario</button><input id="booking-date" type="date" lang="es-ES" tabindex="-1" aria-hidden="true"><span id="date-format-help" class="sr-only">Escribe la fecha como día, mes y año, por ejemplo 25/09/2026.</span></div></div><div class="booking-step"><span>02</span><h2>Elige una hora</h2><div id="time-slots" class="time-slots" aria-live="polite"></div></div><div class="booking-step booking-form-container"><span>03</span><h2>Tus datos</h2><form id="booking-form" class="booking-form"><label for="client-name">Nombre completo</label><input id="client-name" name="name" type="text" autocomplete="name" placeholder="Tu nombre" required><label for="client-phone">Telefono</label><input id="client-phone" name="phone" type="tel" autocomplete="tel" placeholder="+34 600 000 000" required><label for="client-email">Correo electronico</label><input id="client-email" name="email" type="email" autocomplete="email" placeholder="tu@email.com" required><label for="service-choice">Servicio</label><select id="service-choice" name="service" required><option value="">Selecciona un servicio</option></select><button class="button" type="submit">Confirmar reserva <span aria-hidden="true">↗</span></button></form></div></div><p id="booking-status" class="booking-status" aria-live="polite"></p></section>
+    </main>
+    <footer class="site-footer"><div><a class="brand" href="index.html"><span class="brand-mark">G</span><span><strong>Gómez</strong><small>Estilistas</small></span></a><p>Alta costura capilar en Pamplona.</p></div><div class="footer-links"><a href="servicios.html">Servicios</a><a href="reservas.html">Reservas</a><a href="aviso-legal.html">Aviso legal</a><a href="privacidad.html">Privacidad</a><a href="cookies-policy.html">Cookies</a><button class="admin-link" type="button" data-cookie-settings>Preferencias</button><span>© 2026 Gómez Estilistas</span></div></footer>
+  </div>
+  <div id="success-toast" class="success-toast" role="status" aria-live="polite" hidden><span class="success-icon" aria-hidden="true">✓</span><div><strong>Tu cita esta confirmada</strong><p id="success-toast-message"></p></div><button type="button" data-toast-close aria-label="Cerrar confirmacion">×</button></div>
+</body>
+</html>
