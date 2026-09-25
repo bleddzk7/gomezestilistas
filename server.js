@@ -20,6 +20,15 @@ const adminPasswordHash = process.env.ADMIN_PASSWORD_HASH || '';
 const adminName = process.env.ADMIN_NAME || 'Administrador';
 const adminTokenSecret = process.env.ADMIN_TOKEN_SECRET || '';
 const publicOrigin = process.env.PUBLIC_APP_ORIGIN || '';
+const madridDateTime = new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'Europe/Madrid',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  hourCycle: 'h23'
+});
 const supabase = process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY
   ? createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
   : null;
@@ -53,7 +62,7 @@ app.use(express.static(__dirname, {
   etag: true,
   lastModified: true,
   setHeaders(response, filePath) {
-    if (filePath.endsWith('.html')) {
+    if (filePath.endsWith('.html') || filePath.endsWith('.js')) {
       response.setHeader('Cache-Control', 'no-cache, max-age=0, must-revalidate');
     } else {
       response.setHeader('Cache-Control', 'public, max-age=604800, stale-while-revalidate=86400');
@@ -96,30 +105,32 @@ const blockedSlotSchema = z.object({
 }).strict();
 
 function dateIsAllowed(value) {
-  const date = new Date(`${value}T00:00:00`);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const maximum = new Date(today);
-  maximum.setDate(maximum.getDate() + 90);
-  return !Number.isNaN(date.getTime()) && date >= today && date <= maximum;
+  const date = new Date(`${value}T00:00:00.000Z`);
+  if (Number.isNaN(date.getTime()) || date.toISOString().slice(0, 10) !== value) return false;
+  const today = localDateKey();
+  const maximum = new Date(`${today}T00:00:00.000Z`);
+  maximum.setUTCDate(maximum.getUTCDate() + 90);
+  return value >= today && value <= maximum.toISOString().slice(0, 10);
 }
 
 function localDateKey(date = new Date()) {
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+  const parts = Object.fromEntries(madridDateTime.formatToParts(date).map(({ type, value }) => [type, value]));
+  return `${parts.year}-${parts.month}-${parts.day}`;
 }
 
 function slotsFor(dateValue) {
-  const date = new Date(`${dateValue}T00:00:00`);
-  if (date.getDay() === 0 || Number.isNaN(date.getTime())) return [];
-  const opening = date.getDay() === 6 ? 9 * 60 : 10 * 60;
-  const closing = date.getDay() === 6 ? 14 * 60 : 18 * 60;
+  const date = new Date(`${dateValue}T00:00:00.000Z`);
+  const weekday = date.getUTCDay();
+  if (weekday === 0 || Number.isNaN(date.getTime())) return [];
+  const opening = weekday === 6 ? 9 * 60 : 10 * 60;
+  const closing = weekday === 6 ? 14 * 60 : 18 * 60;
   const slots = Array.from({ length: (closing - opening) / 30 + 1 }, (_, index) => {
     const minutes = opening + index * 30;
     return `${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`;
   });
   if (dateValue !== localDateKey()) return slots;
-  const now = new Date();
-  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+  const now = Object.fromEntries(madridDateTime.formatToParts(new Date()).map(({ type, value }) => [type, value]));
+  const currentMinutes = Number(now.hour) * 60 + Number(now.minute);
   return slots.filter((time) => {
     const [hour, minutes] = time.split(':').map(Number);
     return hour * 60 + minutes > currentMinutes;
