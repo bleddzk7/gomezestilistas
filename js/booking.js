@@ -7,19 +7,19 @@ const dateDisplayInput = document.querySelector('#booking-date-display');
 const datePickerButton = document.querySelector('#booking-date-picker');
 const slotsContainer = document.querySelector('#time-slots');
 const bookingForm = document.querySelector('#booking-form');
+const serviceSelect = document.querySelector('#service-choice');
 const status = document.querySelector('#booking-status');
 let selectedTime = '';
 let occupiedTimes = new Set();
 let availabilityController;
 
 function renderServiceOptions() {
-  const select = document.querySelector('#service-choice');
-  select.innerHTML = '<option value="">Selecciona un servicio</option>';
+  serviceSelect.innerHTML = '<option value="">Selecciona un servicio</option>';
   Object.entries(CONFIG.services).forEach(([id, service]) => {
     const option = document.createElement('option');
     option.value = id;
     option.textContent = `${service.name} · ${service.price}€`;
-    select.append(option);
+    serviceSelect.append(option);
   });
 }
 
@@ -62,16 +62,19 @@ async function renderSlots() {
     return;
   }
   slotsContainer.innerHTML = '<p class="booking-loading">Consultando disponibilidad...</p>';
+  const selectedService = CONFIG.services[serviceSelect.value];
+  const validTimes = new Set(getTimeSlots(dateInput.value, selectedService?.durationMinutes ?? 0));
   availabilityController = new AbortController();
   try {
     const availability = await loadAvailability(dateInput.value, availabilityController.signal);
     occupiedTimes = new Set([...availability.occupied, ...availability.blocked]);
-    if (!availability.slots.length) {
-      slotsContainer.innerHTML = '<p class="booking-empty"><strong>0 horarios disponibles</strong><br>No quedan franjas libres este día.</p>';
+    const availableSlots = availability.slots.filter((time) => validTimes.has(time));
+    if (!availableSlots.length) {
+      slotsContainer.innerHTML = '<p class="booking-empty"><strong>0 horarios disponibles</strong><br>No quedan horas para este servicio antes del cierre.</p>';
       return;
     }
     slotsContainer.replaceChildren();
-    availability.slots.forEach((time) => {
+    availableSlots.forEach((time) => {
       const button = document.createElement('button');
       const isOccupied = occupiedTimes.has(time);
       const isBlocked = availability.blocked.includes(time);
@@ -101,12 +104,13 @@ function setInitialDate() {
 setInitialDate();
 renderServiceOptions();
 renderPrivacyNotice();
+serviceSelect.addEventListener('change', renderSlots);
+const requestedService = new URLSearchParams(window.location.search).get('servicio');
+if (requestedService && CONFIG.services[requestedService]) serviceSelect.value = requestedService;
 renderSlots();
 window.setInterval(() => {
   if (dateInput.value === formatDate(new Date())) renderSlots();
 }, 60000);
-const requestedService = new URLSearchParams(window.location.search).get('servicio');
-if (requestedService && CONFIG.services[requestedService]) document.querySelector('#service-choice').value = requestedService;
 
 dateInput.addEventListener('change', () => {
   dateDisplayInput.value = formatDisplayDateInput(dateInput.value);

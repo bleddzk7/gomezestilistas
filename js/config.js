@@ -50,15 +50,18 @@ export const CONFIG = Object.freeze({
 
 export const getServiceEntries = () => Object.entries(CONFIG.services);
 
-export const getTimeSlots = (dateValue = '') => {
+export const getTimeSlots = (dateValue = '', durationMinutes = 0) => {
   const date = dateValue ? new Date(`${dateValue}T00:00:00`) : new Date();
   if (Number.isNaN(date.getTime())) return [];
   const schedule = date.getDay() === 6 ? CONFIG.schedule.saturday : CONFIG.schedule.weekday;
   if (date.getDay() === 0 || !schedule) return [];
   const [openingHour, openingMinutes] = schedule.opening.split(':').map(Number);
   const [closingHour, closingMinutes] = schedule.closing.split(':').map(Number);
+  const opening = openingHour * 60 + openingMinutes;
+  const closing = closingHour * 60 + closingMinutes;
+  const latestStart = closing - Math.max(durationMinutes, 60);
   const slots = [];
-  for (let minutes = openingHour * 60 + openingMinutes; minutes <= closingHour * 60 + closingMinutes; minutes += 30) {
+  for (let minutes = opening; minutes <= latestStart; minutes += 30) {
     slots.push(`${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`);
   }
   return slots;

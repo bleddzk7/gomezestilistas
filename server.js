@@ -118,13 +118,15 @@ function localDateKey(date = new Date()) {
   return `${parts.year}-${parts.month}-${parts.day}`;
 }
 
-function slotsFor(dateValue) {
+function slotsFor(dateValue, durationMinutes = 0) {
   const date = new Date(`${dateValue}T00:00:00.000Z`);
   const weekday = date.getUTCDay();
   if (weekday === 0 || Number.isNaN(date.getTime())) return [];
   const opening = weekday === 6 ? 9 * 60 : 10 * 60;
   const closing = weekday === 6 ? 14 * 60 : 18 * 60;
-  const slots = Array.from({ length: (closing - opening) / 30 + 1 }, (_, index) => {
+  const latestStart = closing - Math.max(durationMinutes, 60);
+  const slotCount = Math.max(0, Math.floor((latestStart - opening) / 30) + 1);
+  const slots = Array.from({ length: slotCount }, (_, index) => {
     const minutes = opening + index * 30;
     return `${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`;
   });
@@ -196,7 +198,7 @@ app.post('/api/admin/login', adminLoginLimiter, validateBody(loginSchema), async
 app.post('/api/appointments', requireDatabase, validateBody(appointmentSchema), async (req, res) => {
   const { name, phone, email, serviceId, date, time } = req.validatedBody;
   const service = services[serviceId];
-  if (!name?.trim() || !phone?.trim() || !email?.trim() || !service || !dateIsAllowed(date) || !slotsFor(date).includes(time)) return res.status(400).json({ error: 'Revisa los datos y el horario seleccionado.' });
+  if (!name?.trim() || !phone?.trim() || !email?.trim() || !service || !dateIsAllowed(date) || !slotsFor(date, service[1]).includes(time)) return res.status(400).json({ error: 'Revisa los datos y el horario seleccionado.' });
   const { data: blockedSlot, error: blockedError } = await supabase.from('blocked_slots').select('id').eq('blocked_date', date).eq('blocked_time', time).maybeSingle();
   if (blockedError) return res.status(500).json({ error: 'No se pudo validar el horario.' });
   if (blockedSlot) return res.status(409).json({ error: 'Este horario no está disponible.' });
