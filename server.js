@@ -19,7 +19,14 @@ const adminEmail = process.env.ADMIN_EMAIL || '';
 const adminPasswordHash = process.env.ADMIN_PASSWORD_HASH || '';
 const adminName = process.env.ADMIN_NAME || 'Administrador';
 const adminTokenSecret = process.env.ADMIN_TOKEN_SECRET || '';
-const publicOrigin = process.env.PUBLIC_APP_ORIGIN || '';
+const normalizeOrigin = (value) => {
+  try {
+    return new URL(value).origin;
+  } catch {
+    return '';
+  }
+};
+const publicOrigin = normalizeOrigin(process.env.PUBLIC_APP_ORIGIN) || normalizeOrigin(process.env.RENDER_EXTERNAL_URL);
 const madridDateTime = new Intl.DateTimeFormat('en-CA', {
   timeZone: 'Europe/Madrid',
   year: 'numeric',
