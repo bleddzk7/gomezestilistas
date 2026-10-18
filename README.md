@@ -1,25 +1,15 @@
-# Gómez Estilistas
+# IRUÑARTEA
 
-## Puesta en marcha
+Web estática de demostración para IRUÑARTEA, peluquería en C. Bernardino Tirapu, 31, Pamplona (Navarra).
 
-1. Crea un proyecto gratuito en Supabase.
-2. Ejecuta `supabase/schema.sql` en el SQL Editor.
-3. Copia `.env.example` a `.env` y completa las credenciales del proyecto y `ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH`, `ADMIN_NAME` y `ADMIN_TOKEN_SECRET`.
-4. Instala dependencias con `npm install`.
-5. Arranca con `npm start`. Puedes abrir la interfaz con Go Live en `http://localhost:5502`; la API Express escuchará en `http://localhost:5503`.
+## Ejecutar en local
 
-La clave `SUPABASE_SERVICE_ROLE_KEY`, el hash de contraseña admin y `ADMIN_TOKEN_SECRET` solo se usan en el servidor. No los publiques ni los incluyas en el frontend.
+Sirve la carpeta con cualquier servidor estático (por ejemplo la extensión Live Server). La web usa módulos JavaScript del navegador y necesita servirse por HTTP; no requiere dependencias, backend ni variables de entorno.
 
-Si ya ejecutaste la versión anterior del esquema, vuelve a ejecutar `supabase/schema.sql` para crear la tabla `blocked_slots`, que permite cerrar horas manualmente desde el panel.
+## Cita por WhatsApp
 
-## Seguridad del administrador
+El formulario prepara un mensaje con nombre, servicio y preferencia horaria para `wa.me/34604978534`. No guarda datos ni consulta disponibilidad; el peluquero confirma la hora por WhatsApp.
 
-Genera un hash bcrypt para la contraseña sin guardar la contraseña en el proyecto:
+## Contenido provisional
 
-`node -e "require('bcrypt').hash(process.argv[1], 12).then(console.log)" "TU_CONTRASEÑA"`
-
-Genera el secreto JWT con:
-
-`node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`
-
-Configura el resultado como `ADMIN_PASSWORD_HASH` y `ADMIN_TOKEN_SECRET`. En Render usa `NODE_ENV=production` y cambia `PUBLIC_APP_ORIGIN` por el dominio público exacto.
+Los tres servicios y precios son estimaciones de demostración pendientes de confirmación. Las fotos de `assets/` (`Fotooeluquero.jpg`, `Corteantes.png`, `Cortedespues.png`) son las del proyecto anterior y deben sustituirse por imágenes de IRUÑARTEA. El titular legal y el correo de contacto siguen pendientes.
