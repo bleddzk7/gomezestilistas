@@ -9,7 +9,7 @@
    ```
 5. **Authentication → Providers → Email**: desactiva *Allow new users to sign up* (nadie más podrá registrarse).
 6. **Project Settings → API**: copia *Project URL* y la clave *anon / publishable* a `js/config.js` (`supabaseUrl`, `supabaseKey`). La clave anon es pública por diseño; la protección real son las políticas RLS del esquema.
-7. Sube a Vercel. El panel está en `https://TU-DOMINIO/administrador/`.
+7. Sube a Vercel. El panel está en `https://TU-DOMINIO/admin/`.
 8. (Opcional) Para que Google Sheets use los mismos servicios y horarios: en `google-sheets/Code.gs` rellena `SUPABASE_URL` y `SUPABASE_KEY`, y en Apps Script haz *Implementar → Gestionar implementaciones → Editar → Nueva versión*.
 
 Las reservas de la web se guardan en Google Sheets **y** en Supabase (sección *Reservas* del panel).
