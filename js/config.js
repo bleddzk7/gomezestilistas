@@ -6,8 +6,8 @@ export const CONFIG = {
   whatsapp: '34604978534',
   // Supabase (Project Settings > API). La clave "anon/publishable" es pública por diseño; la seguridad la dan las políticas RLS.
   // Vacío = la web usa el contenido incluido en el HTML y el panel de administración queda desactivado.
-  supabaseUrl: '',
-  supabaseKey: '',
+  supabaseUrl: 'https://fnjcgfjmxuvgyoclrlnr.supabase.co',
+  supabaseKey: 'sb_publishable_9emt8lAGlymWLOLyDDHQiw_2HfK_Wbc',
   // URL de la aplicación web de Google Apps Script (ver google-sheets/Code.gs). Vacío = no se guarda nada.
   bookingsUrl: 'https://script.google.com/macros/s/AKfycbzn4Ax_5fCusQtfJGdGENZxyRir5F0rT5y_cRa_BYPvRzwgUPQ0tLKNmF1zkMOWrWXl1Q/exec',
   bookingsToken: '049dd5e29af6bbe03bf49d4278e1a7c5e8bb',
