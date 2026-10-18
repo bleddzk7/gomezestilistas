@@ -172,10 +172,10 @@ create unique index if not exists bookings_one_per_slot on public.bookings (book
 create or replace function public.booked_times(p_date date)
 returns text[]
 language sql stable security definer set search_path = public as
-
+$$
   select coalesce(array_agg(to_char(booking_time, 'HH24:MI')), '{}')
   from public.bookings where booking_date = p_date and status <> 'cancelada';
-;
+$$;
 revoke all on function public.booked_times(date) from public;
 grant execute on function public.booked_times(date) to anon, authenticated;
 
