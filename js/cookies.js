@@ -39,7 +39,7 @@ function showPreferences(consent = readConsent() || defaultConsent()) {
   dialog.innerHTML = `<section class="cookie-dialog" role="dialog" aria-modal="true" aria-labelledby="cookie-dialog-title">
     <button class="cookie-dialog-close" type="button" data-cookie-close aria-label="Cerrar preferencias">×</button>
     <p class="eyebrow">Privacidad</p><h2 id="cookie-dialog-title">Preferencias de cookies</h2>
-    <p>La web no usa analítica ni publicidad. Las opciones futuras permanecen desactivadas en esta demo.</p>
+    <p>La web no usa analítica ni publicidad. Las opciones futuras permanecen desactivadas.</p>
     <label class="cookie-toggle"><input type="checkbox" data-consent-preferences ${consent.preferences ? 'checked' : ''}><span><strong>Preferencias</strong><small>Recordar opciones de navegación.</small></span></label>
     <label class="cookie-toggle"><input type="checkbox" data-consent-analytics ${consent.analytics ? 'checked' : ''}><span><strong>Analítica</strong><small>No hay herramientas analíticas activas actualmente.</small></span></label>
     <label class="cookie-toggle"><input type="checkbox" data-consent-marketing ${consent.marketing ? 'checked' : ''}><span><strong>Marketing</strong><small>No se utilizan herramientas de marketing actualmente.</small></span></label>
